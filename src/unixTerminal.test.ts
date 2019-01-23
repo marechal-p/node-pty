@@ -79,7 +79,7 @@ if (process.platform !== 'win32') {
 
       it('should open a pty with access to a master and slave socket', (done) => {
         let doneCalled = false;
-        term = UnixTerminal.open({});
+        term = UnixTerminal.open({ testing: true });
 
         let slavebuf = '';
         term.slave.on('data', (data) => {

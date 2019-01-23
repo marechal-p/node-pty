@@ -20,15 +20,23 @@ export interface ITerminal {
   pid: number;
 
   /**
-   * The socket for the master file descriptor. This is not supported on
-   * Windows.
+   * The socket for the master file descriptor.
+   * On Windows this is simply the read/write socket used under the hood.
    */
   master: net.Socket;
 
   /**
-   * The socket for the slave file descriptor. This is not supported on Windows.
+   * The socket for the slave file descriptor.
+   * Not supported on Windows.
    */
-  slave: net.Socket;
+  slave?: net.Socket;
+
+  /**
+   * Name/ID of the pty.
+   * Windows: Value is an arbitrary number.
+   * UNIX: Value is the file representing the pty.
+   */
+  pty: string;
 
   /**
    * Writes data to the socket.
@@ -121,4 +129,5 @@ export interface IPtyOpenOptions {
   cols?: number;
   rows?: number;
   encoding?: string;
+  testing?: boolean;
 }

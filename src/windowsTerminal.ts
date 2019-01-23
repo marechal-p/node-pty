@@ -16,6 +16,8 @@ const DEFAULT_FILE = 'cmd.exe';
 const DEFAULT_NAME = 'Windows Shell';
 
 export class WindowsTerminal extends Terminal {
+  protected _pty: number;
+
   private _isReady: boolean;
   private _deferreds: any[];
   private _agent: WindowsPtyAgent;
@@ -190,7 +192,7 @@ export class WindowsTerminal extends Terminal {
     });
   }
 
+  public get pty(): string { return this._pty.toString(10); }
   public get process(): string { return this._name; }
-  public get master(): Socket { throw new Error('master is not supported on Windows'); }
-  public get slave(): Socket { throw new Error('slave is not supported on Windows'); }
+  public get master(): Socket { return this._socket; }
 }

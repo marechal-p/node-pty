@@ -3,6 +3,7 @@
  * Copyright (c) 2016, Daniel Imms (MIT License).
  */
 
+import * as fs from 'fs';
 import * as net from 'net';
 import * as os from 'os';
 import * as path from 'path';
@@ -52,10 +53,11 @@ export class UnixTerminal extends Terminal {
   private _boundClose: boolean;
   private _emittedClose: boolean;
   private _master: net.Socket;
-  private _slave: net.Socket;
+  private _slave?: net.Socket;
 
+  public get pty(): string { return this._pty; }
   public get master(): net.Socket { return this._master; }
-  public get slave(): net.Socket { return this._slave; }
+  public get slave(): net.Socket | undefined { return this._slave; }
 
   constructor(file?: string, args?: ArgvOrCommandLine, opt?: IPtyForkOptions) {
     super(opt);
@@ -209,9 +211,11 @@ export class UnixTerminal extends Terminal {
     self._master.setEncoding(encoding);
     self._master.resume();
 
-    self._slave = new PipeSocket(term.slave);
-    self._slave.setEncoding(encoding);
-    self._slave.resume();
+    if (opt.testing) {
+      self._slave = new PipeSocket(<number>term.slave);
+      self._slave.setEncoding(encoding);
+      self._slave.resume();
+    }
 
     self._socket = self._master;
     self._pid = null;

@@ -2,6 +2,8 @@
  * Copyright (c) 2017, Daniel Imms (MIT License).
  */
 
+import * as Interfaces from '../src/interfaces';
+
 declare module '@theia/node-pty' {
   /**
    * Forks a process as a pseudoterminal.
@@ -16,16 +18,15 @@ declare module '@theia/node-pty' {
    */
   export function spawn(file: string, args: string[] | string, options: IPtyForkOptions): IPty;
 
-  export interface IPtyForkOptions {
-    name?: string;
-    cols?: number;
-    rows?: number;
-    cwd?: string;
-    env?: { [key: string]: string };
-    uid?: number;
-    gid?: number;
-    encoding?: string;
-  }
+  /**
+   * UNIX ONLY
+   * Opens an empty pty (master+slave).
+   * @param options
+   */
+  export function open(options?: IPtyOpenOptions): IPty;
+
+  export type IPtyForkOptions = Interfaces.IPtyForkOptions;
+  export type IPtyOpenOptions = Interfaces.IPtyOpenOptions;
 
   /**
    * An interface representing a pseudoterminal, on Windows this is emulated via the winpty library.
@@ -40,6 +41,13 @@ declare module '@theia/node-pty' {
      * The title of the active process.
      */
     process: string;
+
+    /**
+     * Name/ID of the pty.
+     * Windows: Value is an arbitrary number.
+     * UNIX: Value is the file representing the pty.
+     */
+    pty: string;
 
     /**
      * Adds a listener to the data event, fired when data is returned from the pty.

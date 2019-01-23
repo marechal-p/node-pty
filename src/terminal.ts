@@ -122,9 +122,9 @@ export abstract class Terminal implements ITerminal {
   public abstract destroy(): void;
   public abstract kill(signal?: string): void;
 
+  public abstract get pty(): string;
   public abstract get process(): string;
   public abstract get master(): Socket;
-  public abstract get slave(): Socket;
 
   // TODO: Should this be in the API?
   public redraw(): void {
